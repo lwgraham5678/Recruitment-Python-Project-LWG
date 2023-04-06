@@ -2,6 +2,7 @@ import networkx as nx
 import pandas
 import numpy as np
 import scipy as sp
+
 class P:
     g1 = nx.Graph()
     g2 = nx.Graph()
@@ -15,13 +16,12 @@ class P:
     desr = 0.9957387249440693
     bw = 0.2
 
-    totalmenXmencommreg = pandas.read_csv(r'.\RefrenceFiles\totalmenXmencommreg.csv', index_col=0) #gets data from local spot and reads it into a data frame
-    numpars1Xmencommreg = pandas.read_csv(r'.\RefrenceFiles\numpars1Xmencommreg.csv', index_col=0)
-    numpars1Xnum_bmsm   = pandas.read_csv(r'.\RefrenceFiles\numpars1Xnum_bmsm.csv', index_col=0)
-    totalmenXnum_bmsm   = pandas.read_csv(r'.\RefrenceFiles\totalmenXnum_bmsm.csv', index_col=0)
+    totalmenXmencommreg = pandas.read_csv(r'.\LWG-Work\ReferenceFiles\totalmenXmencommreg.csv', index_col=0) #gets data from local spot and reads it into a data frame
+    numpars1Xmencommreg = pandas.read_csv(r'.\LWG-Work\ReferenceFiles\numpars1Xmencommreg.csv', index_col=0)
+    numpars1Xnum_bmsm   = pandas.read_csv(r'.\LWG-Work\ReferenceFiles\numpars1Xnum_bmsm.csv', index_col=0)
+    totalmenXnum_bmsm   = pandas.read_csv(r'.\LWG-Work\ReferenceFiles\totalmenXnum_bmsm.csv', index_col=0)
 
     L = [(numpars1Xmencommreg, 'numpars1Xmencommreg:'), (numpars1Xnum_bmsm, 'numpars1Xnum_bmsm:'), (totalmenXmencommreg, 'totalmenXmencommreg:'), (totalmenXnum_bmsm, 'totalmenXnum_bmsm:')]
 
     overlapstat = 0.0
     overlapstatlist = []
-

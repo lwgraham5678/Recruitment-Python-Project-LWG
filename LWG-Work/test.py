@@ -5,16 +5,19 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import scipy as sp
 import math as m
-
 '''
 for i, j in P.L:
-    ds = td.GetDegreeSequences(i)
+    print(j)
+    X = td.GetDegreeSequences(i)
+    a, loc, scale = td.Fit(X[1], 'powerlaw')
+    Nds1 = sp.stats.powerlaw.rvs(a, loc, scale, size = 5000)
 
-    X = td.FitPDF(ds[0])
-    Y = td.FitPDF(ds[1])
-
-    print( j, X, Y)
-
-
-td.ExpDistribution_TB(600, 1, 4.283849918433932)
+    Nds2 = [round(i) for i in Nds1]
+    td.itter_ConfigGen(list(Nds2), 100)
 '''
+
+#fd = 
+#print(P.L[0][0])
+fd = td.GetDegreeDistrabution(td.RemoveHighValuedNodes(P.L[0][0], 10, 10))
+td.Fit(fd[0], 'powerlaw')
+print(fd)

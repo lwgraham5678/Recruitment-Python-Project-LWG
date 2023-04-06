@@ -127,6 +127,24 @@ def GetDegreeSequences(Df: pandas.DataFrame):
     
     return([Xf, Yf])
 
+def GetDegreeDistrabution(Df: pandas.DataFrame):
+    #function extracts two degree distrabutions lists from a cross tab dataframe
+    
+    HMArraystart = Df.to_numpy()
+
+    X = [int(i) for i in Df.columns.to_list()]
+    Y = [int(i) for i in Df.index]
+
+    Xf = {i : 0 for i in X}
+    Yf = {i : 0 for i in Y}
+
+    for i in range(len(X)):
+        for j in range(len(Y)):
+            ele = HMArraystart[j, i]
+            Xf[X[i]] += ele
+            Yf[Y[j]] += ele
+    return([Xf, Yf])
+
 def CreateNetworks(dsc: list, dsx: list):
     #function configures social and sexual networks then extracts overlap statistic from them. (split into two functions)
 
@@ -279,9 +297,9 @@ def itter_ConfigGen(ds: list, num_itters : int):
     if (n/N) > 0.95:
         return G
     else:
-        return [G, max(L)]
-        #pipe()
+        pipe()
         #raise TimeoutError("Skill Issue: itterations failed to bring graph into band width")
+        return [G, max(L)]
 
 def PowerDistribution(n : int, max : int, alpha : float):
     Li = sp.stats.powerlaw.rvs(alpha, loc = 0, scale = max, size = n)
@@ -318,9 +336,28 @@ def degreedistbar(ds, title = ''):
     plt.title(title)
     plt.show()
 
-def FitPDF(ds):
+
+def RemoveHighValuedNodes(df : pandas.DataFrame, Xlimit : int, Ylimit : int):
+    collist = []
+    rowlist = []
     
-    return sp.stats.expon.fit(ds)
+    for col in df.columns:
+        if int(col) > Ylimit:
+            df[col] = [0 for i in range(0, len(df[col]))]
+
+    for row in df.index:
+        if int(row) > Xlimit:
+            df.loc[row] = [0 for i in range(0, len(df.loc[row]))]
+            
+    
+    
+    return df
+
+def Fit(ds : list, distribution : str):
+    dist = getattr(sp.stats, distribution)
+    param = dist.fit(ds)
+    return param
+
 
 # Test benches below
 
@@ -400,4 +437,4 @@ def ExpDistribution_TB(n : int, scalar : int, beta : float):
 def pipe():
     #notifaction sound function
     
-    snd.playsound(r'.\ReferenceFiles\PipeFalling.mp3')
+    snd.playsound(r'.\LWG-Work\ReferenceFiles\PipeFalling.mp3')
