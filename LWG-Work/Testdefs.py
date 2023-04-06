@@ -358,7 +358,20 @@ def Fit(ds : list, distribution : str):
     param = dist.fit(ds)
     return param
 
+def NormalizedZeroPaddedDS(DD : dict):
 
+    DS = []
+
+    for key, value in DD:
+        for i in range(1, value):
+            DS.append(key)
+
+    pop = len(DS)
+    
+    for i in DS:
+        i = i/pop
+
+    return DS
 # Test benches below
 
 def ConfigGen_TB(n : int, m : int):

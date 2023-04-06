@@ -8,6 +8,7 @@ import math as m
 '''
 for i, j in P.L:
     print(j)
+    i = td.RemoveHighValuedNodes(i, 300, 300)
     X = td.GetDegreeSequences(i)
     a, loc, scale = td.Fit(X[1], 'powerlaw')
     Nds1 = sp.stats.powerlaw.rvs(a, loc, scale, size = 5000)
