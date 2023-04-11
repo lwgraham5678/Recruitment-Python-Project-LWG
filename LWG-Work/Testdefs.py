@@ -275,7 +275,7 @@ def itter_ConfigGen(ds: list, num_itters : int):
     N = X[2] # M
     c = 0
 
-    while (n/N) < 1 and c < num_itters:
+    while (n/N) > 0 and c < num_itters:
         X = ConfigGen(ds, extra_values = True)
         G = X[0]
         n = X[1]
@@ -283,10 +283,11 @@ def itter_ConfigGen(ds: list, num_itters : int):
         c += 1
         L.append(n/N)
 
-    if (n/N) == 1:
+    if (n/N) == 0:
+        print("success")
         return G
 
-    while (n/N) < 0.95 and c < num_itters:
+    while (n/N) > 0.05 and c < num_itters:
         X = ConfigGen(ds, extra_values = True)
         G = X[0]
         n = X[1]
@@ -294,12 +295,31 @@ def itter_ConfigGen(ds: list, num_itters : int):
         c += 1
         L.append(n/N)
 
-    if (n/N) > 0.95:
+    if (n/N) < 0.05:
+        print(min(L), max(L))
         return G
     else:
         pipe()
+        print(min(L), max(L))
         #raise TimeoutError("Skill Issue: itterations failed to bring graph into band width")
-        return [G, max(L)]
+        return [G, min(L)]
+    
+def itter_ConfigGen_min(ds : list, num_itters : int):
+
+    network_dictionary = {}
+
+    for i in range(0, num_itters):
+        X = ConfigGen(ds, extra_values = True)
+        G = X[0]
+        n = X[1] # Z = M - n
+        N = X[2] # M
+
+        network_dictionary[n/N] = G
+    
+    best_network = min(network_dictionary.keys())
+    
+    return network_dictionary[best_network]
+
 
 def PowerDistribution(n : int, max : int, alpha : float):
     Li = sp.stats.powerlaw.rvs(alpha, loc = 0, scale = max, size = n)
