@@ -378,6 +378,12 @@ def Fit(ds : list, distribution : str):
     param = dist.fit(ds)
     return param
 
+def RandomValues(parameters, distribution : str, length : int):
+    parameters.append(length)
+    dist = getattr(sp.stats, distribution)
+    values = dist.rvs(tuple(parameters))
+    return values
+
 def NormalizedZeroPaddedDS(DD : dict):
 
     DS = []
