@@ -10,9 +10,9 @@ column_limit = 100
 num_generated_sequences = 10
 sequence_length = 5000
 Configuration_itterations = 100
-num_networks_per_ds = 10
+num_networks_per_ds = 50
 data_list = []
-num_alpha_parameters = 10
+num_alpha_parameters = 50
 
 dataframe = td.RemoveHighValuedNodes(originaldataframe, row_limit, column_limit)
 

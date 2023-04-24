@@ -3,7 +3,7 @@ from TestConfig import P
 import scipy as sp
 import numpy as np
 import math as m
-
+import matplotlib.pyplot as plt
 
 originaldataframe = P.numpars1Xnum_bmsm
 row_limit = 100
@@ -47,6 +47,17 @@ for alpha in alpha_parameter_list:
     Sigma = np.matmul(std_matrix, np.matmul(Omega, std_matrix))
     
     log_of_means_array = sp.stats.multivariate_normal.rvs(mean = [m.log(row_mean), m.log(column_mean)], cov = Sigma)
+
+    #plotting sub routine-------------------------------------------
+    '''
+    x, y = np.mgrid[0.0:3.5:.01, 0.0:3.5:.01]
+    pos = np.dstack((x, y))
+    mvdist = sp.stats.multivariate_normal(mean = [m.log(row_mean), m.log(column_mean)], cov = Sigma)
+    fig2 = plt.figure()
+    ax2 = fig2.add_subplot(111)
+    ax2.contourf(x, y, mvdist.pdf(pos))
+    plt.show()
+    '''
 
     #log_of_means_array = log_of_means_dist.rvs()
     

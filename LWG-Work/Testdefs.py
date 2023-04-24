@@ -257,6 +257,8 @@ def ConfigGen(ds : list, extra_values = False):
     M = len(G.edges())
     G.remove_edges_from(nx.selfloop_edges(G))
     G = nx.Graph(G) # cast to Graph to remove multi edges
+    nx.draw_random(G.subgraph(list(G.nodes)[0:60]), node_size = 0.85)
+    plt.show()
     if extra_values:
         n = (len(G.edges()))
         Z = M - n
