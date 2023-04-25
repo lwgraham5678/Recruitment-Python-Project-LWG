@@ -5,14 +5,14 @@ import numpy as np
 import math as m
 import matplotlib.pyplot as plt
 
-originaldataframe = P.numpars1Xnum_bmsm
-row_limit = 100
-column_limit = 100
+originaldataframe = P.totalmenXmencommreg
+row_limit = 300
+column_limit = 300
 num_generated_sequences = 10
 sequence_length = 1000
 Configuration_itterations = 10
-num_networks_per_ds = 50
-num_alpha_parameters = 50
+num_networks_per_ds = 100
+num_alpha_parameters = 100
 data_list = []
 dist = sp.stats.poisson
 bounds = {'mu' : (0, 1000)}
@@ -23,19 +23,20 @@ sequences = td.GetDegreeSequences(dataframe)
 
 alpha_parameter_list = list(np.random.uniform(-1.0,1.0,num_alpha_parameters))
 
-row_fit = sp.stats.fit(dist, sequences[0], bounds)
-column_fit = sp.stats.fit(dist, sequences[1], bounds)
-
-row_mu, row_loc = row_fit.params
-column_mu, column_loc = column_fit.params
-
-row_std = dist.std(row_mu, row_loc)
-column_std = dist.std(column_mu, column_loc)
-row_mean = row_mu
-column_mean = column_mu
 
 
-std_matrix = np.array([[m.log(row_std), 0],[0, m.log(column_std)]])
+row_var = np.var(sequences[0])
+column_var = np.var(sequences[1])
+row_mean = np.average(sequences[0])
+column_mean = np.average(sequences[1])
+
+row_tau = m.sqrt(1 + ((row_var-row_mean)/(row_mean**2)))
+column_tau = m.sqrt(1 + ((column_var-column_mean)/(column_mean**2)))
+
+row_theta = m.log(row_mean/row_tau)
+column_theta = m.log(column_mean/column_tau)
+
+tau_matrix = np.array([[row_tau, 0],[0, column_tau]])
 
 for alpha in alpha_parameter_list:
 
@@ -44,15 +45,15 @@ for alpha in alpha_parameter_list:
     Omega = np.array([[1, alpha], [alpha, 1]])
 
     #Sigma = np.array([[(row_std**2)*alpha, row_std*column_std], [row_std*column_std, (column_std**2)*alpha]]) 
-    Sigma = np.matmul(std_matrix, np.matmul(Omega, std_matrix))
+    Sigma = np.matmul(tau_matrix, np.matmul(Omega, tau_matrix))
     
-    log_of_means_array = sp.stats.multivariate_normal.rvs(mean = [m.log(row_mean), m.log(column_mean)], cov = Sigma)
+    log_of_means_array = sp.stats.multivariate_normal.rvs(mean = [row_theta, column_theta], cov = Sigma, size = sequence_length)
 
     #plotting sub routine-------------------------------------------
     '''
     x, y = np.mgrid[0.0:3.5:.01, 0.0:3.5:.01]
     pos = np.dstack((x, y))
-    mvdist = sp.stats.multivariate_normal(mean = [m.log(row_mean), m.log(column_mean)], cov = Sigma)
+    mvdist = sp.stats.multivariate_normal(mean = [ow_theta, column_theta], cov = Sigma)
     fig2 = plt.figure()
     ax2 = fig2.add_subplot(111)
     ax2.contourf(x, y, mvdist.pdf(pos))
@@ -64,8 +65,13 @@ for alpha in alpha_parameter_list:
     means_array = np.exp(log_of_means_array)
     #print(means_array)
 
-    row_sequence = list(dist.rvs(mu = means_array[0], size = sequence_length))
-    column_sequence = list(dist.rvs(mu = means_array[1], size = sequence_length))
+    row_sequence = []
+    column_sequence = []
+    
+    for mean_pair in means_array:
+        row_sequence.append(dist.rvs(mu = mean_pair[0]))
+        column_sequence.append(dist.rvs(mu = mean_pair[1]))
+    
     correlation_coeff, p_value = sp.stats.spearmanr(row_sequence, column_sequence)
     #print(correlation_coeff)
     #print(max(row_sequence), min(row_sequence))

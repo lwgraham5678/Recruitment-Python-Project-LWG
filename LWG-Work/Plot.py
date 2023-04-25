@@ -105,6 +105,7 @@ cor_coef = [a for a, b, c in Data]
 overlap_dist = [b for a, b, c in Data]
 zipped_num_edges = [c for a, b, c in Data]
 
+bins = [-0.5*a for a in range(1,20)] + [0.5*a for a in range(1,20)] + [0.0]
 combined_corr = {-0.25: [],-0.2: [],-0.15: [],-0.1: [],-0.05: [],0.0: [],0.05: [],0.1: [],0.15: [],0.2: [],0.25: []}
 
 for coef, overlap in zip(cor_coef, overlap_dist):

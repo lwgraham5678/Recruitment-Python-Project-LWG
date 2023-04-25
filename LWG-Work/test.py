@@ -25,3 +25,5 @@ td.Fit(fd[0], 'powerlaw')
 print(fd)
 '''
 
+bins = [-0.05*a for a in range(1,20)] + [0.05*a for a in range(1,20)] + [0.0]
+print(bins)
