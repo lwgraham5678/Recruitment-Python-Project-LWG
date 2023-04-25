@@ -11,8 +11,8 @@ column_limit = 300
 num_generated_sequences = 10
 sequence_length = 1000
 Configuration_itterations = 10
-num_networks_per_ds = 100
-num_alpha_parameters = 100
+num_networks_per_ds = 10
+num_alpha_parameters = 50
 data_list = []
 dist = sp.stats.poisson
 bounds = {'mu' : (0, 1000)}
@@ -73,7 +73,7 @@ for alpha in alpha_parameter_list:
         column_sequence.append(dist.rvs(mu = mean_pair[1]))
     
     correlation_coeff, p_value = sp.stats.spearmanr(row_sequence, column_sequence)
-    #print(correlation_coeff)
+    print(correlation_coeff, alpha_parameter_list.index(alpha))
     #print(max(row_sequence), min(row_sequence))
     #print(max(column_sequence), min(column_sequence))
     

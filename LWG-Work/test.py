@@ -25,5 +25,7 @@ td.Fit(fd[0], 'powerlaw')
 print(fd)
 '''
 
-bins = [-0.05*a for a in range(1,20)] + [0.05*a for a in range(1,20)] + [0.0]
-print(bins)
+ds = [0, 1, 3, 3, 2, 1]
+
+G = nx.configuration_model(ds)
+print([G.edges(), G.nodes()])
