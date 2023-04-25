@@ -11,8 +11,8 @@ column_limit = 300
 num_generated_sequences = 10
 sequence_length = 1000
 Configuration_itterations = 10
-num_networks_per_ds = 10
-num_alpha_parameters = 50
+num_networks_per_ds = 100
+num_alpha_parameters = 100
 data_list = []
 dist = sp.stats.poisson
 bounds = {'mu' : (0, 1000)}
@@ -21,14 +21,18 @@ dataframe = td.RemoveHighValuedNodes(originaldataframe, row_limit, column_limit)
 
 sequences = td.GetDegreeSequences(dataframe)
 
-alpha_parameter_list = list(np.random.uniform(-1.0,1.0,num_alpha_parameters))
-
+#alpha_parameter_list = list(np.random.uniform(-1.0,1.0,num_alpha_parameters))
+alpha_parameter_list = [0.5]
 
 
 row_var = np.var(sequences[0])
 column_var = np.var(sequences[1])
 row_mean = np.average(sequences[0])
 column_mean = np.average(sequences[1])
+print('social:')
+print(row_mean, row_var)
+print('sexual:')
+print(column_mean, column_var)
 
 row_tau = m.sqrt(1 + ((row_var-row_mean)/(row_mean**2)))
 column_tau = m.sqrt(1 + ((column_var-column_mean)/(column_mean**2)))
@@ -50,15 +54,17 @@ for alpha in alpha_parameter_list:
     log_of_means_array = sp.stats.multivariate_normal.rvs(mean = [row_theta, column_theta], cov = Sigma, size = sequence_length)
 
     #plotting sub routine-------------------------------------------
-    '''
-    x, y = np.mgrid[0.0:3.5:.01, 0.0:3.5:.01]
+    
+    x, y = np.mgrid[-2.5:6.5:.01, -2.5:6.5:.01]
     pos = np.dstack((x, y))
-    mvdist = sp.stats.multivariate_normal(mean = [ow_theta, column_theta], cov = Sigma)
+    mvdist = sp.stats.multivariate_normal(mean = [row_theta, column_theta], cov = Sigma)
     fig2 = plt.figure()
     ax2 = fig2.add_subplot(111)
+    plt.xlabel('log of social mean')
+    plt.ylabel('log of sexual mean')
     ax2.contourf(x, y, mvdist.pdf(pos))
     plt.show()
-    '''
+    
 
     #log_of_means_array = log_of_means_dist.rvs()
     
@@ -73,9 +79,25 @@ for alpha in alpha_parameter_list:
         column_sequence.append(dist.rvs(mu = mean_pair[1]))
     
     correlation_coeff, p_value = sp.stats.spearmanr(row_sequence, column_sequence)
-    print(correlation_coeff, alpha_parameter_list.index(alpha))
+    #print(correlation_coeff, alpha_parameter_list.index(alpha))
     #print(max(row_sequence), min(row_sequence))
     #print(max(column_sequence), min(column_sequence))
+    
+    #Degree sequence plotting subroutine---------------------------------------------------------------
+    
+    plt.hist([x for x in row_sequence if x < 1000], bins = 100)
+    plt.xlabel('Degree')
+    plt.ylabel('number of nodes')
+    plt.title('Degree distribution of social degree sequence')
+    plt.show()
+    plt.clf()
+    plt.hist([x for x in column_sequence if x < 1000], bins = 100)
+    plt.xlabel('Degree')
+    plt.ylabel('number of nodes')
+    plt.title('Degree distribution of sexual degree sequence')
+    plt.show()
+    plt.clf()
+    
     
     overlaps = []
     num_edges_list = []

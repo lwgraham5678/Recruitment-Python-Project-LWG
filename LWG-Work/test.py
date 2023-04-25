@@ -25,7 +25,11 @@ td.Fit(fd[0], 'powerlaw')
 print(fd)
 '''
 
-ds = [0, 1, 3, 3, 2, 1]
+points = td.RemoveHighValuedNodes(P.numpars1Xnum_bmsm, 300, 300)
 
-G = nx.configuration_model(ds)
-print([G.edges(), G.nodes()])
+X = td.GetDegreeSequences(points)
+
+print(sp.stats.spearmanr(X[0],X[1]), td.spearmanr_ci(X[0],X[1], 0.05))
+
+td.degreedistbar(X[0], title = 'Degree distribution of social degree sequence')
+td.degreedistbar(X[1], title = 'Degree distribution of sexual degree sequence')

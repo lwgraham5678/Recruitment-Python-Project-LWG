@@ -351,8 +351,8 @@ def degreedistbar(ds, title = ''):
         if type(i) != int or i < 0:
             pipe()
             raise TypeError('Skill Issue: List entry not positive integer')
-        
-    plt.bar(Ld.keys(), Ld.values())
+    print(max(Ld.values()))
+    plt.bar(list(Ld.keys()), list(Ld.values()), width= 0.5)
     plt.xlabel('Degree')
     plt.ylabel('number of nodes')
     plt.title(title)

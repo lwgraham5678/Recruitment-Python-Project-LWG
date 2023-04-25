@@ -3,6 +3,7 @@ import pandas
 import numpy as np
 import scipy as sp
 from TestConfig import P
+import Testdefs as td
 #Exporting-------------------------------------------------------------------------------------------------------------------------------------------------
 
 points = P.numpars1Xnum_bmsm
@@ -122,6 +123,40 @@ plt.xlabel('Correlation coefficient')
 plt.ylabel('Overlap Distribution')
 plt.violinplot(dataset = overlap_dist, positions = cor_coef, showmeans = True)
 #plt.violinplot(dataset = list(true_set.values()), positions = list(true_set.keys()), showmeans = True)
+plt.show()
+
+plt.clf()
+
+Xrow_num_edges = []
+YOverlap = []
+
+for i in range(0,len(overlap_dist)):
+    Xrow_num_edges += [a for a, b in zipped_num_edges[i]]
+    YOverlap += overlap_dist[i]
+
+print('social:')
+print(sp.stats.spearmanr(Xrow_num_edges, YOverlap), td.spearmanr_ci(Xrow_num_edges, YOverlap, 0.05))
+
+plt.xlabel('Number of edges in social network')
+plt.ylabel('Overlap')
+plt.scatter(Xrow_num_edges, YOverlap)
+plt.show()
+
+plt.clf()
+
+Xcolumn_num_edges = []
+YOverlap = []
+
+for i in range(0,len(overlap_dist)):
+    Xcolumn_num_edges += [b for a, b in zipped_num_edges[i]]
+    YOverlap += overlap_dist[i]
+
+print('sexual:')
+print(sp.stats.spearmanr(Xcolumn_num_edges, YOverlap), td.spearmanr_ci(Xcolumn_num_edges, YOverlap, 0.05))
+
+plt.xlabel('Number of edges in sexual network')
+plt.ylabel('Overlap')
+plt.scatter(Xcolumn_num_edges, YOverlap)
 plt.show()
 
 plt.clf()
