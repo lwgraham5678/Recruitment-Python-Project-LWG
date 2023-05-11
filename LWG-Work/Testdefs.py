@@ -307,7 +307,7 @@ def itter_ConfigGen(ds: list, num_itters : int):
         return [G, min(L)]
     
 def itter_ConfigGen_min(ds : list, num_itters : int):
-
+    # function that takes a degree sequence runs it through the config model multiple times and returns the one with the lowest n/N
     network_dictionary = {}
 
     for i in range(0, num_itters):
@@ -360,6 +360,7 @@ def degreedistbar(ds, title = ''):
 
 
 def RemoveHighValuedNodes(df : pandas.DataFrame, Xlimit : int, Ylimit : int):
+    # removes values of a data frame larger than a specified index
     collist = []
     rowlist = []
     
@@ -376,6 +377,7 @@ def RemoveHighValuedNodes(df : pandas.DataFrame, Xlimit : int, Ylimit : int):
     return df
 
 def Fit(ds : list, distribution : str):
+    # General fontinuous fit function
     dist = getattr(sp.stats, distribution)
     param = dist.fit(ds)
     return param

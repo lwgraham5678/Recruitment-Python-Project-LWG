@@ -5,6 +5,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import scipy as sp
 import math as m
+import json
 '''
 for i, j in P.L:
     print(j)
@@ -23,7 +24,7 @@ for i, j in P.L:
 fd = td.GetDegreeDistrabution(td.RemoveHighValuedNodes(P.L[0][0], 10, 10))
 td.Fit(fd[0], 'powerlaw')
 print(fd)
-'''
+
 
 points = td.RemoveHighValuedNodes(P.numpars1Xnum_bmsm, 300, 300)
 
@@ -33,3 +34,4 @@ print(sp.stats.spearmanr(X[0],X[1]), td.spearmanr_ci(X[0],X[1], 0.05))
 
 td.degreedistbar(X[0], title = 'Degree distribution of social degree sequence')
 td.degreedistbar(X[1], title = 'Degree distribution of sexual degree sequence')
+'''

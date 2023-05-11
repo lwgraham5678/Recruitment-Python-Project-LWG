@@ -21,18 +21,18 @@ dataframe = td.RemoveHighValuedNodes(originaldataframe, row_limit, column_limit)
 
 sequences = td.GetDegreeSequences(dataframe)
 
-#alpha_parameter_list = list(np.random.uniform(-1.0,1.0,num_alpha_parameters))
-alpha_parameter_list = [0.5]
+alpha_parameter_list = list(np.random.uniform(-1.0,1.0,num_alpha_parameters))
+#alpha_parameter_list = [0.5]
 
 
 row_var = np.var(sequences[0])
 column_var = np.var(sequences[1])
 row_mean = np.average(sequences[0])
 column_mean = np.average(sequences[1])
-print('social:')
-print(row_mean, row_var)
-print('sexual:')
-print(column_mean, column_var)
+#print('social:')
+#print(row_mean, row_var)
+#print('sexual:')
+#print(column_mean, column_var)
 
 row_tau = m.sqrt(1 + ((row_var-row_mean)/(row_mean**2)))
 column_tau = m.sqrt(1 + ((column_var-column_mean)/(column_mean**2)))
@@ -54,7 +54,7 @@ for alpha in alpha_parameter_list:
     log_of_means_array = sp.stats.multivariate_normal.rvs(mean = [row_theta, column_theta], cov = Sigma, size = sequence_length)
 
     #plotting sub routine-------------------------------------------
-    
+    '''
     x, y = np.mgrid[-2.5:6.5:.01, -2.5:6.5:.01]
     pos = np.dstack((x, y))
     mvdist = sp.stats.multivariate_normal(mean = [row_theta, column_theta], cov = Sigma)
@@ -64,7 +64,7 @@ for alpha in alpha_parameter_list:
     plt.ylabel('log of sexual mean')
     ax2.contourf(x, y, mvdist.pdf(pos))
     plt.show()
-    
+    '''
 
     #log_of_means_array = log_of_means_dist.rvs()
     
@@ -76,7 +76,7 @@ for alpha in alpha_parameter_list:
     
     for mean_pair in means_array:
         row_sequence.append(dist.rvs(mu = mean_pair[0]))
-        column_sequence.append(dist.rvs(mu = mean_pair[1]))
+        column_sequence.append(dist.rvs(mu = mean_pair[1])) # splits 2 by 1000 array into two lists
     
     correlation_coeff, p_value = sp.stats.spearmanr(row_sequence, column_sequence)
     #print(correlation_coeff, alpha_parameter_list.index(alpha))
@@ -84,7 +84,7 @@ for alpha in alpha_parameter_list:
     #print(max(column_sequence), min(column_sequence))
     
     #Degree sequence plotting subroutine---------------------------------------------------------------
-    
+    '''
     plt.hist([x for x in row_sequence if x < 1000], bins = 100)
     plt.xlabel('Degree')
     plt.ylabel('number of nodes')
@@ -97,7 +97,7 @@ for alpha in alpha_parameter_list:
     plt.title('Degree distribution of sexual degree sequence')
     plt.show()
     plt.clf()
-    
+    '''
     
     overlaps = []
     num_edges_list = []
