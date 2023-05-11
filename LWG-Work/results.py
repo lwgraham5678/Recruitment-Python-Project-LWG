@@ -15,17 +15,17 @@ num_networks_per_ds = 100
 num_alpha_parameters = 100
 data_list = []
 dist = sp.stats.poisson
-bounds = {'mu' : (0, 1000)}
+#bounds = {'mu' : (0, 1000)}
 
-dataframe = td.RemoveHighValuedNodes(originaldataframe, row_limit, column_limit)
+dataframe = td.RemoveHighValuedNodes(originaldataframe, row_limit, column_limit) # remove hubs
 
 sequences = td.GetDegreeSequences(dataframe)
 
-alpha_parameter_list = list(np.random.uniform(-1.0,1.0,num_alpha_parameters))
+alpha_parameter_list = list(np.random.uniform(-1.0,1.0,num_alpha_parameters)) # uniformly sampled covariance parameter
 #alpha_parameter_list = [0.5]
 
 
-row_var = np.var(sequences[0])
+row_var = np.var(sequences[0]) 
 column_var = np.var(sequences[1])
 row_mean = np.average(sequences[0])
 column_mean = np.average(sequences[1])
@@ -34,7 +34,9 @@ column_mean = np.average(sequences[1])
 #print('sexual:')
 #print(column_mean, column_var)
 
-row_tau = m.sqrt(1 + ((row_var-row_mean)/(row_mean**2)))
+
+# Ian's transformations
+row_tau = m.sqrt(1 + ((row_var-row_mean)/(row_mean**2))) 
 column_tau = m.sqrt(1 + ((column_var-column_mean)/(column_mean**2)))
 
 row_theta = m.log(row_mean/row_tau)
@@ -48,12 +50,11 @@ for alpha in alpha_parameter_list:
     
     Omega = np.array([[1, alpha], [alpha, 1]])
 
-    #Sigma = np.array([[(row_std**2)*alpha, row_std*column_std], [row_std*column_std, (column_std**2)*alpha]]) 
     Sigma = np.matmul(tau_matrix, np.matmul(Omega, tau_matrix))
     
     log_of_means_array = sp.stats.multivariate_normal.rvs(mean = [row_theta, column_theta], cov = Sigma, size = sequence_length)
 
-    #plotting sub routine-------------------------------------------
+    #plotting multivariate normal distribution-------------------------------------------
     '''
     x, y = np.mgrid[-2.5:6.5:.01, -2.5:6.5:.01]
     pos = np.dstack((x, y))
@@ -74,16 +75,17 @@ for alpha in alpha_parameter_list:
     row_sequence = []
     column_sequence = []
     
+    # splits 2 by 1000 array into two lists
     for mean_pair in means_array:
         row_sequence.append(dist.rvs(mu = mean_pair[0]))
-        column_sequence.append(dist.rvs(mu = mean_pair[1])) # splits 2 by 1000 array into two lists
+        column_sequence.append(dist.rvs(mu = mean_pair[1])) 
     
     correlation_coeff, p_value = sp.stats.spearmanr(row_sequence, column_sequence)
     #print(correlation_coeff, alpha_parameter_list.index(alpha))
     #print(max(row_sequence), min(row_sequence))
     #print(max(column_sequence), min(column_sequence))
     
-    #Degree sequence plotting subroutine---------------------------------------------------------------
+    #Degree distribution histogram---------------------------------------------------------------
     '''
     plt.hist([x for x in row_sequence if x < 1000], bins = 100)
     plt.xlabel('Degree')
