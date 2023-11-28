@@ -9,10 +9,11 @@ originaldataframe = P.totalmenXmencommreg
 row_limit = 300
 column_limit = 300
 num_generated_sequences = 10
-sequence_length = 1000
+sequence_length = 100
 Configuration_itterations = 10
-num_networks_per_ds = 100
-num_alpha_parameters = 100
+num_networks_per_ds = 10
+num_alpha_parameters = 10
+num_sequence_per_alpha = 10
 data_list = []
 dist = sp.stats.poisson
 #bounds = {'mu' : (0, 1000)}
@@ -72,50 +73,51 @@ for alpha in alpha_parameter_list:
     means_array = np.exp(log_of_means_array)
     #print(means_array)
 
-    row_sequence = []
-    column_sequence = []
-    
-    # splits 2 by 1000 array into two lists
-    for mean_pair in means_array:
-        row_sequence.append(dist.rvs(mu = mean_pair[0]))
-        column_sequence.append(dist.rvs(mu = mean_pair[1])) 
-    
-    correlation_coeff, p_value = sp.stats.spearmanr(row_sequence, column_sequence)
-    #print(correlation_coeff, alpha_parameter_list.index(alpha))
-    #print(max(row_sequence), min(row_sequence))
-    #print(max(column_sequence), min(column_sequence))
-    
-    #Degree distribution histogram---------------------------------------------------------------
-    '''
-    plt.hist([x for x in row_sequence if x < 1000], bins = 100)
-    plt.xlabel('Degree')
-    plt.ylabel('number of nodes')
-    plt.title('Degree distribution of social degree sequence')
-    plt.show()
-    plt.clf()
-    plt.hist([x for x in column_sequence if x < 1000], bins = 100)
-    plt.xlabel('Degree')
-    plt.ylabel('number of nodes')
-    plt.title('Degree distribution of sexual degree sequence')
-    plt.show()
-    plt.clf()
-    '''
-    
-    overlaps = []
-    num_edges_list = []
+    for i in range(num_sequence_per_alpha):
+        row_sequence = []
+        column_sequence = []
+        
+        # splits 2 by 1000 array into two lists
+        for mean_pair in means_array:
+            row_sequence.append(dist.rvs(mu = mean_pair[0]))
+            column_sequence.append(dist.rvs(mu = mean_pair[1])) 
+        
+        correlation_coeff, p_value = sp.stats.spearmanr(row_sequence, column_sequence)
+        #print(correlation_coeff, alpha_parameter_list.index(alpha))
+        #print(max(row_sequence), min(row_sequence))
+        #print(max(column_sequence), min(column_sequence))
+        
+        #Degree distribution histogram---------------------------------------------------------------
+        '''
+        plt.hist([x for x in row_sequence if x < 1000], bins = 100)
+        plt.xlabel('Degree')
+        plt.ylabel('number of nodes')
+        plt.title('Degree distribution of social degree sequence')
+        plt.show()
+        plt.clf()
+        plt.hist([x for x in column_sequence if x < 1000], bins = 100)
+        plt.xlabel('Degree')
+        plt.ylabel('number of nodes')
+        plt.title('Degree distribution of sexual degree sequence')
+        plt.show()
+        plt.clf()
+        '''
+        
+        overlaps = []
+        num_edges_list = []
 
-    for n in range(0, num_networks_per_ds):
-        row_network = td.itter_ConfigGen_min(row_sequence, Configuration_itterations)
-        column_network = td.itter_ConfigGen_min(column_sequence, Configuration_itterations)
+        for n in range(0, num_networks_per_ds):
+            row_network = td.itter_ConfigGen_min(row_sequence, Configuration_itterations)
+            column_network = td.itter_ConfigGen_min(column_sequence, Configuration_itterations)
 
-        overlap = td.FindOverlapStat(row_network, column_network)  
+            overlap = td.FindOverlapStat(row_network, column_network)  
 
-        row_edges = len(row_network.edges())
-        column_edges = len(column_network.edges())
+            row_edges = len(row_network.edges())
+            column_edges = len(column_network.edges())
 
-        overlaps.append(overlap)
-        num_edges_list.append((row_edges, column_edges))
+            overlaps.append(overlap)
+            num_edges_list.append((row_edges, column_edges))
 
-    data_list.append((correlation_coeff, overlaps, num_edges_list))
+        data_list.append((correlation_coeff, overlaps, num_edges_list))
 
 print(data_list)
