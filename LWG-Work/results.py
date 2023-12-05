@@ -105,6 +105,7 @@ for alpha in alpha_parameter_list:
         
         overlaps = []
         num_edges_list = []
+        overlap_max_degree_list = []
 
         for n in range(0, num_networks_per_ds):
             row_network = td.itter_ConfigGen_min(row_sequence, Configuration_itterations)
@@ -117,7 +118,9 @@ for alpha in alpha_parameter_list:
 
             overlaps.append(overlap)
             num_edges_list.append((row_edges, column_edges))
+            overlap_max_degree_list.extend(td.FindOverlapDegreeMax(row_network, column_network))
 
         data_list.append((correlation_coeff, overlaps, num_edges_list))
 
 print(data_list)
+print(overlap_max_degree_list)

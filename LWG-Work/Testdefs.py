@@ -402,6 +402,19 @@ def NormalizedZeroPaddedDS(DD : dict):
         i = i/pop
 
     return DS
+
+def FindOverlapDegreeMax(gc : nx.graph, gx : nx.graph):
+    # Function that returns a list of max degree attached to each edge in th overlap
+    out = []
+
+    overlap = set(gc.edges()).intersection(set(gx.edges()))
+
+    for edge in overlap:
+        Degs = [gc.degree[edge[0]], gc.degree[edge[1]], gx.degree[edge[0]], gx.degree[edge[1]]]
+        out.append(max(Degs))
+
+    return out
+
 # Test benches below
 
 def ConfigGen_TB(n : int, m : int):

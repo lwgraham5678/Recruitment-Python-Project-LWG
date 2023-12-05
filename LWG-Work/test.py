@@ -35,3 +35,10 @@ print(sp.stats.spearmanr(X[0],X[1]), td.spearmanr_ci(X[0],X[1], 0.05))
 td.degreedistbar(X[0], title = 'Degree distribution of social degree sequence')
 td.degreedistbar(X[1], title = 'Degree distribution of sexual degree sequence')
 '''
+
+G1 = nx.configuration_model([1,2,3,4])
+G2 = nx.configuration_model([0,1,3,2])
+
+print(G1.edges(), G2.edges())
+
+print(td.FindOverlapDegreeMax(G1, G2))
