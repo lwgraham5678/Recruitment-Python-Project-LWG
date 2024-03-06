@@ -8,12 +8,12 @@ import matplotlib.pyplot as plt
 originaldataframe = P.totalmenXmencommreg
 row_limit = 300
 column_limit = 300
-num_generated_sequences = 100
+num_generated_sequences = 10
 sequence_length = 100
 Configuration_itterations = 10
-num_networks_per_ds = 100
-num_alpha_parameters = 100
-num_sequence_per_alpha = 100
+num_networks_per_ds = 10
+num_alpha_parameters = 10
+num_sequence_per_alpha = 10
 data_list = []
 dist = sp.stats.poisson
 #bounds = {'mu' : (0, 1000)}
@@ -108,8 +108,11 @@ for alpha in alpha_parameter_list:
         overlap_max_degree_list = []
 
         for n in range(0, num_networks_per_ds):
-            row_network = td.itter_ConfigGen_min(row_sequence, Configuration_itterations)
-            column_network = td.itter_ConfigGen_min(column_sequence, Configuration_itterations)
+            row_sequence = td.oddtest(row_sequence)
+            column_sequence = td.oddtest(column_sequence)
+            
+            row_network = td.nx.random_degree_sequence_graph(row_sequence, tries=100)
+            column_network = td.nx.random_degree_sequence_graph(column_sequence, tries=100)
 
             overlap = td.FindOverlapStat(row_network, column_network)  
 
