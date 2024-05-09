@@ -8,19 +8,19 @@ from numba import njit
 
 originaldataframe = P.totalmenXmencommreg
 row_limit = 300
-column_limit = 300
+column_limit = 300 # remove hub nodes parameters
 num_generated_sequences = 10
 sequence_length = 100
 Configuration_itterations = 10
 num_networks_per_ds = 10
-num_alpha_parameters = 10
+num_alpha_parameters = 10 # alpha is covariance parameter
 num_sequence_per_alpha = 10
 data_list = []
 overlap_max_degree_list = []
 dist = sp.stats.poisson
 #bounds = {'mu' : (0, 1000)}
 
-dataframe = td.RemoveHighValuedNodes(originaldataframe, row_limit, column_limit) # remove hubs
+dataframe = td.RemoveHighValuedNodes(originaldataframe, row_limit, column_limit) # remove hubs nodes
 
 sequences = td.GetDegreeSequences(dataframe) # degree sequences from dataftames
 

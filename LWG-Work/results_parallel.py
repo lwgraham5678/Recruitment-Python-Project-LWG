@@ -73,3 +73,8 @@ def results(input : int, originaldataframe) :
     data_list.append((correlation_coeff, overlaps, num_edges_list))
 
     return data_list
+
+
+out = results(1, P.numpars1Xmencommreg)
+
+print(out)
