@@ -22,7 +22,7 @@ dist = sp.stats.poisson
 
 dataframe = td.RemoveHighValuedNodes(originaldataframe, row_limit, column_limit) # remove hubs
 
-sequences = td.GetDegreeSequences(dataframe)
+sequences = td.GetDegreeSequences(dataframe) # degree sequences from dataftames
 
 alpha_parameter_list = list(np.random.uniform(-1.0,1.0,num_alpha_parameters)) # uniformly sampled covariance parameter
 #alpha_parameter_list = [0.5]
@@ -31,7 +31,7 @@ alpha_parameter_list = list(np.random.uniform(-1.0,1.0,num_alpha_parameters)) # 
 row_var = np.var(sequences[0]) 
 column_var = np.var(sequences[1])
 row_mean = np.average(sequences[0])
-column_mean = np.average(sequences[1])
+column_mean = np.average(sequences[1]) # parameters of sequences
 #print('social:')
 #print(row_mean, row_var)
 #print('sexual:')
@@ -51,6 +51,7 @@ tau_matrix = np.array([[row_tau, 0],[0, column_tau]])
 for alpha in alpha_parameter_list:
 
     #print(alpha)
+    #ians distribution stuff
     
     Omega = np.array([[1, alpha], [alpha, 1]])
 
@@ -85,7 +86,7 @@ for alpha in alpha_parameter_list:
             row_sequence.append(dist.rvs(mu = mean_pair[0]))
             column_sequence.append(dist.rvs(mu = mean_pair[1])) 
         
-        correlation_coeff, p_value = sp.stats.spearmanr(row_sequence, column_sequence)
+        correlation_coeff, p_value = sp.stats.spearmanr(row_sequence, column_sequence) # gets stat parameters of generated sequences
         #print(correlation_coeff, alpha_parameter_list.index(alpha))
         #print(max(row_sequence), min(row_sequence))
         #print(max(column_sequence), min(column_sequence))
@@ -112,19 +113,19 @@ for alpha in alpha_parameter_list:
         for n in range(0, num_networks_per_ds):
             
             row_network = td.itter_ConfigGen_min(row_sequence, Configuration_itterations)
-            column_network = td.itter_ConfigGen_min(column_sequence, Configuration_itterations)
+            column_network = td.itter_ConfigGen_min(column_sequence, Configuration_itterations) # gets graphs closest to simple graph
 
-            overlap = td.FindOverlapStat(row_network, column_network)  
+            overlap = td.FindOverlapStat(row_network, column_network) #finds overlap
 
             row_edges = len(row_network.edges())
-            column_edges = len(column_network.edges())
+            column_edges = len(column_network.edges()) #finds number of edges
 
             overlaps.append(overlap)
             num_edges_list.append((row_edges, column_edges))
-            overlap_max_degree_list.append(td.FindOverlapDegreeMax(row_network, column_network))
+            overlap_max_degree_list.append(td.FindOverlapDegreeMax(row_network, column_network)) # additional data
             #print(overlap_max_degree_list)
 
         data_list.append((correlation_coeff, overlaps, num_edges_list))
 
 print(data_list)
-print(overlap_max_degree_list)
+print(overlap_max_degree_list) # output

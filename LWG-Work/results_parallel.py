@@ -20,7 +20,7 @@ def results(input : int, originaldataframe) :
     dataframe = td.RemoveHighValuedNodes(originaldataframe, row_limit, column_limit) # remove hubs
     sequences = td.GetDegreeSequences(dataframe)
     
-    alpha_parameter_list = list(np.random.uniform(-1.0,1.0,1))
+    alpha_parameter_list = list(np.random.uniform(-1.0,1.0,1)) #need to seed randomness
     alpha = alpha_parameter_list[0]
 
     row_var = np.var(sequences[0]) 
