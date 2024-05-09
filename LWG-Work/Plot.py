@@ -163,7 +163,17 @@ plt.clf()
 
 data = P.max_deg_list
 
-plt.xlabel('Max degree')
-plt.ylabel('occurence')
-plt.hist(P.max_deg_list)
+max_local_deg = [a for (a, b, c) in data]
+gc_deg = [b for (a, b, c) in data]
+gx_deg = [c for (a, b, c) in data]
+
+plt.xlabel('Local overlap maximmum')
+plt.ylabel('social network degree')
+plt.scatter(max_local_deg, gc_deg)
+plt.show()
+
+
+plt.xlabel('Local overlap maximmum')
+plt.ylabel('sexual network degree')
+plt.scatter(max_local_deg, gx_deg)
 plt.show()

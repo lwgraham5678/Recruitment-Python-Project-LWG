@@ -409,9 +409,26 @@ def FindOverlapDegreeMax(gc : nx.graph, gx : nx.graph):
 
     overlap = set(gc.edges()).intersection(set(gx.edges()))
 
-    for edge in overlap:
-        Degs = [gc.degree[edge[0]], gc.degree[edge[1]], gx.degree[edge[0]], gx.degree[edge[1]]]
-        out.append(max(Degs))
+    nodes = list(gc.nodes())
+
+    local_overlap = {a:0 for a in nodes}
+
+    for node in nodes:
+        for edge in overlap:
+            if node in edge:
+                local_overlap[node] += 1
+
+    local_overlap_list = list(local_overlap.values())
+    local_overlap_node_list = list(local_overlap.keys())
+    
+    local_overlap_max = max(local_overlap_list)
+
+    local_max_node = local_overlap_node_list[local_overlap_list.index(local_overlap_max)]
+
+    gc_deg = gc.degree[local_max_node]
+    gx_deg = gx.degree[local_max_node]
+
+    out = (local_overlap_max, gc_deg, gx_deg)
 
     return out
 

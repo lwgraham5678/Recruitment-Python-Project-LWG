@@ -4,17 +4,19 @@ import scipy as sp
 import numpy as np
 import math as m
 import matplotlib.pyplot as plt
+from numba import njit
 
 originaldataframe = P.totalmenXmencommreg
 row_limit = 300
 column_limit = 300
-num_generated_sequences = 100
+num_generated_sequences = 10
 sequence_length = 100
 Configuration_itterations = 10
-num_networks_per_ds = 100
-num_alpha_parameters = 100
-num_sequence_per_alpha = 100
+num_networks_per_ds = 10
+num_alpha_parameters = 10
+num_sequence_per_alpha = 10
 data_list = []
+overlap_max_degree_list = []
 dist = sp.stats.poisson
 #bounds = {'mu' : (0, 1000)}
 
@@ -45,6 +47,7 @@ column_theta = m.log(column_mean/column_tau)
 
 tau_matrix = np.array([[row_tau, 0],[0, column_tau]])
 
+
 for alpha in alpha_parameter_list:
 
     #print(alpha)
@@ -73,7 +76,7 @@ for alpha in alpha_parameter_list:
     means_array = np.exp(log_of_means_array)
     #print(means_array)
 
-    for i in range(num_sequence_per_alpha):
+    for i in range(0, num_sequence_per_alpha):
         row_sequence = []
         column_sequence = []
         
@@ -105,9 +108,9 @@ for alpha in alpha_parameter_list:
         
         overlaps = []
         num_edges_list = []
-        overlap_max_degree_list = []
 
         for n in range(0, num_networks_per_ds):
+            
             row_network = td.itter_ConfigGen_min(row_sequence, Configuration_itterations)
             column_network = td.itter_ConfigGen_min(column_sequence, Configuration_itterations)
 
@@ -118,7 +121,8 @@ for alpha in alpha_parameter_list:
 
             overlaps.append(overlap)
             num_edges_list.append((row_edges, column_edges))
-            overlap_max_degree_list.extend(td.FindOverlapDegreeMax(row_network, column_network))
+            overlap_max_degree_list.append(td.FindOverlapDegreeMax(row_network, column_network))
+            #print(overlap_max_degree_list)
 
         data_list.append((correlation_coeff, overlaps, num_edges_list))
 
